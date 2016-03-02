@@ -50,27 +50,15 @@ public class AuthorTest {
     assertEquals(Author.all().size(), 0);
   }
 
-  // @Test
-  // public void addBook_addsBookToAuthorInJoinTable() {
-  //   Author myAuthor = new Author("Megan", "Fayer");
-  //   myAuthor.save();
-  //   Book testBook = new Book("PE", "PE4567");
-  //   testBook.save();
-  //   myAuthor.addBook(testBook);
-  //   Book savedBook = myAuthor.getBooks().get(0);
-  //   assertTrue(testBook.equals(savedBook));
-  //   assertEquals(myAuthor.getBooks().get(0), testBook);
-  // }
-
-  // @Test
-  // public void addDepartment_addsDepartmentToAuthorInJoinTable() {
-  //   Author myAuthor = new Author("Megan", "Fayer");
-  //   myAuthor.save();
-  //   Department testDepartment = new Department("PE");
-  //   testDepartment.save();
-  //   myAuthor.addDepartment(testDepartment);
-  //   Department savedDepartment = myAuthor.getDepartments().get(0);
-  //   assertTrue(testDepartment.equals(savedDepartment));
-  //   assertEquals(savedDepartment, testDepartment);
-  // }
+  @Test
+  public void addBook_addsBookToAuthorInJoinTable() {
+    Author myAuthor = new Author("Megan", "Fayer");
+    myAuthor.save();
+    Book testBook = new Book("Goodnight Moon");
+    testBook.save(1);
+    myAuthor.addBook(testBook);
+    Book savedBook = myAuthor.getBooks().get(0);
+    assertTrue(testBook.equals(savedBook));
+    assertEquals(myAuthor.getBooks().get(0), testBook);
+  }
 }

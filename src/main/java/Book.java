@@ -6,6 +6,7 @@ import org.sql2o.*;
 public class Book {
   private int id;
   private String title;
+  private boolean status;
 
   public int getId() {
     return id;
@@ -13,6 +14,10 @@ public class Book {
 
   public String getTitle() {
     return title;
+  }
+
+  public boolean getStatus() {
+    return status;
   }
 
 
@@ -38,13 +43,16 @@ public class Book {
     }
   }
 
-  public void save() {
+  public void save(int copies) {
     try(Connection con = DB.sql2o.open()) {
-      String sql = "INSERT INTO books (title) VALUES (:title)";
+      for (int i = 0 ; i < copies ; i++ ){
+      String sql = "INSERT INTO books (title, status) VALUES (:title, :status)";
       this.id = (int) con.createQuery(sql, true)
         .addParameter("title", title)
+        .addParameter("status", true)
         .executeUpdate()
         .getKey();
+      }
     }
   }
 
@@ -79,11 +87,6 @@ public class Book {
     con.createQuery(booksAuthorsDeleteQuery)
       .addParameter("book_id", id)
       .executeUpdate();
-
-    String copiesDeleteQuery = "DELETE FROM copies WHERE book_id = :book_id";
-    con.createQuery(copiesDeleteQuery)
-      .addParameter("book_id", id)
-      .executeUpdate();
     }
   }
 
@@ -107,21 +110,12 @@ public class Book {
     }
   }
 
-  public void addCopy() {
-    try(Connection con = DB.sql2o.open()) {
-      String sql = "INSERT INTO copies (book_id, status) VALUES (:book_id, :status)";
-      con.createQuery(sql)
-        .addParameter("book_id", this.getId())
-        .addParameter("status", true)
-        .executeUpdate();
-    }
-  }
 
   public Integer getCopyCount() {
     try(Connection con = DB.sql2o.open()){
-      String sql = "SELECT COUNT (*) FROM copies WHERE book_id = :book_id";
+      String sql = "SELECT COUNT (*) FROM books WHERE title = :title";
       Integer copyCount = con.createQuery(sql)
-        .addParameter("book_id", this.getId())
+        .addParameter("title", this.getTitle())
         .executeAndFetchFirst(Integer.class);
       return copyCount;
     }
@@ -129,7 +123,7 @@ public class Book {
 
   public void setStatusCheckOut() {
     try(Connection con = DB.sql2o.open()){
-      String sql = "UPDATE copies SET status = :status WHERE book_id = :id";
+      String sql = "UPDATE books SET status = :status WHERE id = :id";
       con.createQuery(sql)
         .addParameter("id", this.getId())
         .addParameter("status", false)
@@ -139,48 +133,11 @@ public class Book {
 
   public void setStatusCheckIn() {
     try(Connection con = DB.sql2o.open()){
-      String sql = "UPDATE copies SET status = :status WHERE book_id = :id";
+      String sql = "UPDATE books SET status = :status WHERE id = :id";
       con.createQuery(sql)
         .addParameter("id", this.getId())
         .addParameter("status", true)
         .executeUpdate();
     }
   }
-
-  // public void removeCategory(int categoryId) {
-  //   try(Connection con = DB.sql2o.open()){
-  //     String sql ="DELETE FROM categories_tasks WHERE category_id =  :categoryId AND task_id = :taskId";      con.createQuery(sql)
-  //       .addParameter("categoryId", categoryId)
-  //       .addParameter("taskId", this.getId())
-  //       .executeUpdate();
-  //   }
-  // }
-  //
-  // public void deCompleteTask() {
-  // try(Connection con = DB.sql2o.open()){
-  //   String sql = "UPDATE tasks SET complete = false WHERE id = :id";
-  //   con.createQuery(sql)
-  //     .addParameter("id", id)
-  //     .executeUpdate();
-  //   }
-  // }
-  //
-  // public void completeTask() {
-  //   try(Connection con = DB.sql2o.open()){
-  //     String sql = "UPDATE tasks SET complete = true WHERE id = :id";
-  //     con.createQuery(sql)
-  //       .addParameter("id", id)
-  //       .executeUpdate();
-  //   }
-  // }
-  //
-  // public void addDue(String dueDate) {
-  //   try(Connection con = DB.sql2o.open()){
-  //     String sql = "UPDATE tasks SET due = :dueDate WHERE id = :id";
-  //     con.createQuery(sql)
-  //       .addParameter("id", id)
-  //       .addParameter("dueDate", dueDate)
-  //       .executeUpdate();
-  //   }
-  // }
 }
