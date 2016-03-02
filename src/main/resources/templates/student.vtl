@@ -1,0 +1,43 @@
+<h2>$student.getFirstName() $student.getLastName()</h2>
+#if ($student.getEnrollmentDate())
+<h3>Enrollment Date: $student.getEnrollmentDate()</h3>
+#end
+#if ($enrolledCourses)
+  <h3>Courses:</h3>
+  #foreach ($course in $enrolledCourses)
+    <h4><a href="/course/$course.getId()">$course.getCourseName()</a></h4>
+  #end
+#end
+#if ($enrolledDepartments)
+  <h3>Departments:</h3>
+  #foreach ($department in $enrolledDepartments)
+    <h4><a href="/department/$department.getId()">$department.getDepartmentName()</a></h4>
+  #end
+#end
+
+
+<form class="form-inline" action="/student/$student.getId()" method="post">
+  #if (!$student.getEnrollmentDate())
+  <label for="enrollmentDate">Enrollment Date</label>
+  <input type="date" name="enrollmentDate" id="enrollmentDate" required>
+  #end
+  <label for="course">Add a Course</label>
+  <select id="course_id" name="course_id" type="text" autofocus="autofocus">
+    <option value="0"></option>
+    #foreach ($course in $allCourses)
+      <option value="$course.getId()"> $course.getCourseName() </option>
+    #end
+  </select>
+  <label for="department">Add a Department</label>
+  <select id="department_id" name="department_id" type="text">
+    <option value="0"></option>
+    #foreach ($department in $allDepartments)
+      <option value="$department.getId()"> $department.getDepartmentName() </option>
+    #end
+  </select>
+  <button type="submit" class="btn btn-success">Submit</button>
+</form>
+
+<p><a href="/"><button class="btn btn-primary" type="button" name="students">Add or View Students</button></a>
+<a href="/courses"><button class="btn btn-primary" type="button" name="courses">Add or View Courses</button></a>
+<a href="/departments"><button class="btn btn-primary" type="button" name="departments">Add or View Departments</button></a></p

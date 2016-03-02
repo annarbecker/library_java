@@ -1,0 +1,22 @@
+<h1>Departments</h1>
+
+#foreach($department in $allDepartments)
+  <form class="form-inline" id = "delete$department.getId()" action="/department/$department.getId()/delete" method="post">
+    <h4><a href="/department/$department.getId()">$department.getDepartmentName()</a>
+    <button type="submit" class="btn btn-xs btn-danger delete">Delete $department.getDepartmentName()</button>
+  </form>
+#end
+
+
+<h4>Add a new department:</h4>
+<form action="/departments" method="post">
+  <label for="departmentName">Department Name</label>
+  <input type="text" name="departmentName" id="departmentName" required autofocus="autofocus">
+  <button type="submit" class="btn btn-success" id="departmentButton" name="button">Submit</button>
+</form>
+<br>
+<br>
+<a href="/"><button class="btn btn-primary" type="button" name="students">Add or View Students</button></a>
+<br>
+<br>
+<a href="/courses"><button class="btn btn-primary" type="button" name="courses">Add or View Courses</button></a>
