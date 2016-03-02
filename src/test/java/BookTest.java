@@ -34,7 +34,7 @@ public class BookTest {
     myBook.save();
     Book savedBook = Book.find(myBook.getId());
     savedBook.updateBook("Cat in the Hat");
-    assertEquals(Book.all().get(0).getBookName(), "Cat in the Hat");
+    assertEquals(Book.all().get(0).getTitle(), "Cat in the Hat");
   }
 
   @Test

@@ -76,7 +76,7 @@ public class Book {
         .executeUpdate();
 
     String booksAuthorsDeleteQuery = "DELETE FROM authors_books WHERE book_id = :book_id";
-    con.createQuery(courseDepartmentDeleteQuery)
+    con.createQuery(booksAuthorsDeleteQuery)
       .addParameter("book_id", id)
       .executeUpdate();
 
@@ -101,7 +101,9 @@ public class Book {
   public List<Author> getAuthors() {
     try(Connection con = DB.sql2o.open()){
       String sql = "SELECT authors.* FROM books JOIN authors_books ON books.id = authors_books.book_id JOIN authors ON authors_books.author_id = authors.id WHERE book_id = :id";
-      return con.createQuery(sql).addParameter("book_id", this.getId()).executeAndFetch(Book.class);
+      return con.createQuery(sql)
+      .addParameter("id", this.getId())
+      .executeAndFetch(Author.class);
     }
   }
 
@@ -115,12 +117,12 @@ public class Book {
     }
   }
 
-  public int getCopyCount() {
+  public Integer getCopyCount() {
     try(Connection con = DB.sql2o.open()){
       String sql = "SELECT COUNT (*) FROM copies WHERE book_id = :book_id";
-      int copyCount = con.createQuery(sql)
+      Integer copyCount = con.createQuery(sql)
         .addParameter("book_id", this.getId())
-        .executeAndFetch(Integer.class);
+        .executeAndFetchFirst(Integer.class);
       return copyCount;
     }
   }
