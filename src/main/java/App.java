@@ -1,5 +1,6 @@
 import java.util.HashMap;
 import java.util.Date;
+import java.lang.StringBuilder;
 import java.util.List;
 import spark.ModelAndView;
 import spark.template.velocity.VelocityTemplateEngine;
@@ -14,6 +15,19 @@ public class App {
 
     get("/", (request, response) -> {
       HashMap<String, Object> model = new HashMap<String, Object>();
+      model.put("template", "templates/index.vtl");
+      return new ModelAndView(model, layout);
+    }, new VelocityTemplateEngine());
+
+    post("/", (request, response) -> {
+      HashMap<String, Object> model = new HashMap<String, Object>();
+      String userFirst = request.queryParams("inputtedFirstName");
+      String userLast = request.queryParams("inputtedLastName");
+      List<Author> searchedAuthors = Author.searchAuthors(userFirst, userLast);
+      String userTitle = request.queryParams("inputtedTitle");
+      List<Book> searchedBooks = Book.searchBooks(userTitle);
+      model.put("searchedAuthors", searchedAuthors);
+      model.put("searchedBooks", searchedBooks);
       model.put("template", "templates/index.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
@@ -33,14 +47,47 @@ public class App {
       response.redirect("/authors");
       return null;
     });
-    //
-    // post("/student/:id/delete", (request, response) -> {
-    //   int studentId = Integer.parseInt(request.params("id"));
-    //   Student student = Student.find(studentId);
-    //   student.deleteStudent();
-    //   response.redirect("/");
-    //   return null;
-    // });
+
+    get("/books", (request, response) -> {
+      HashMap<String, Object> model = new HashMap<String, Object>();
+      model.put("books", Book.all());
+      model.put("template", "templates/books.vtl");
+      return new ModelAndView(model, layout);
+    }, new VelocityTemplateEngine());
+
+    post("/books", (request, response) -> {
+      String title = request.queryParams("title");
+      Integer copies = Integer.parseInt(request.queryParams("copies"));
+      Book newBook = new Book(title);
+      newBook.save(copies);
+      response.redirect("/books");
+      return null;
+    });
+
+    get("/book/:id", (request, response) -> {
+      HashMap<String, Object> model = new HashMap<String, Object>();
+      int bookId = Integer.parseInt(request.params("id"));
+      Book book = Book.find(bookId);
+      model.put("book", book);
+      model.put("template", "templates/book.vtl");
+      return new ModelAndView(model, layout);
+    }, new VelocityTemplateEngine());
+
+    post("/book/:id/delete", (request, response) -> {
+      int bookId = Integer.parseInt(request.params("id"));
+      Book book = Book.find(bookId);
+      book.deleteBook();
+      response.redirect("/");
+      return null;
+    });
+
+    post("/author/:id/delete", (request, response) -> {
+      int authorId = Integer.parseInt(request.params("id"));
+      Author author = Author.find(authorId);
+      author.deleteAuthor();
+      response.redirect("/");
+      return null;
+    });
     //
     // get("/student/:id", (request, response) -> {
     //   HashMap<String, Object> model = new HashMap<String, Object>();

@@ -1,4 +1,5 @@
 import java.util.List;
+import java.lang.StringBuilder;
 import java.util.ArrayList;
 import org.sql2o.*;
 
@@ -106,17 +107,16 @@ public class Author {
     }
   }
 
-  public List<Author> searchAuthors() {
+  public static List<Author> searchAuthors(String userFirst, String userLast) {
     try(Connection con = DB.sql2o.open()) {
       String sql = "SELECT * FROM authors WHERE first_name LIKE :userFirst OR last_name LIKE :userLast";
-      Author author = con.createQuery(sql)
+      return con.createQuery(sql)
         .addParameter("userFirst", userFirst)
         .addParameter("userLast", userLast)
         .executeAndFetch(Author.class);
-      return author;
     }
   }
-
+  //
   // public static String toDisplayCase(String s) {
   //
   //   final String ACTIONABLE_DELIMITERS = " '-/"; // these cause the character following

@@ -140,4 +140,13 @@ public class Book {
         .executeUpdate();
     }
   }
+
+  public static List<Book> searchBooks(String userTitle) {
+    try(Connection con = DB.sql2o.open()){
+      String sql = "SELECT * FROM books WHERE title LIKE :userTitle";
+    return con.createQuery(sql)
+      .addParameter("userTitle", userTitle)
+      .executeAndFetch(Book.class);
+    }
+  }
 }
