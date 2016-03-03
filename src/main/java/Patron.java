@@ -109,16 +109,4 @@ public class Patron {
         .executeUpdate();
     }
   }
-
-  public void bookCheckout() {
-    try(Connection con = DB.sql2o.open()) {
-      String sql = "UPDATE checkouts SET patron_id = :patron_id, book_id = :book_id, checkout_date = :checkout_date, due_date = :due_date";
-      con.createQuery(sql)
-        .addParameter("patron_id", this.getId())
-        .addParameter("book_id", book_id)
-        .addParameter("checkout_date", checkout_date)
-        .addParameter("due_date", due_date)
-        .executeUpdate();
-    }
-  }
 }

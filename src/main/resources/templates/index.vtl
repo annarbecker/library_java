@@ -35,7 +35,8 @@ index.vtl
   #foreach($book in $searchedBooks)
     <form class="form-inline" id = "delete$book.getId()" action="/book/$book.getId()/delete" method="post">
       <h4><a href="/book/$book.getId()">$book.getTitle()</a>
-      #if ($book.getStatus = false) Checked Out</h4>
+      #if ($book.getStatus() == false) Checked Out
+      #end</h4>
     </form>
   #end
 #end

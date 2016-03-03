@@ -1,5 +1,6 @@
+book.vtl
 <h2>$book.getTitle()</h2>
-#if ($book.getStatus = false)
+#if ($book.getStatus() == false)
 <h3>$book.getTitle() is checked out until:</h3>
 #end
 <h3>Authors:</h3>
@@ -10,12 +11,13 @@
 </ul>
 
 <h3>Checkout $book.getTitle()</h3>
-<form class="form-inline" action="/checkout/$patron.getId()" method="post">
-  <label for="parton">Select Patron</label>
-  <select id="parton_id" name="parton_id" required>
+<form class="form-inline" action="/checkout" method="post">
+  <input id="book_id" name="book_id" type="hidden" value="$book.getId()">
+  <label for="patron">Select Patron</label>
+  <select id="patron_id" name="patron_id" required>
     <option value="0"></option>
     #foreach ($patron in $allPatrons)
-      <option value="$patron.getId()">$patron.getLastName(), $patron.getFirstName</option>
+      <option value="$patron.getId()">$patron.getLastName(), $patron.getFirstName()</option>
     #end
   </select>
   <label for="checkout_date">Add Checkout Date</label>

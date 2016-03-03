@@ -23,9 +23,9 @@ public class App {
       HashMap<String, Object> model = new HashMap<String, Object>();
       String userFirst = request.queryParams("inputtedFirstName");
       String userLast = request.queryParams("inputtedLastName");
-      List<Author> searchedAuthors = Author.searchAuthors(userFirst, userLast);
+      List<Author> searchedAuthors = Author.searchAuthors("%" + userFirst + "%", "%" + userLast + "%");
       String userTitle = request.queryParams("inputtedTitle");
-      List<Book> searchedBooks = Book.searchBooks(userTitle);
+      List<Book> searchedBooks = Book.searchBooks("%" + userTitle + "%");
       model.put("searchedAuthors", searchedAuthors);
       model.put("searchedBooks", searchedBooks);
       model.put("template", "templates/index.vtl");
@@ -68,6 +68,7 @@ public class App {
       HashMap<String, Object> model = new HashMap<String, Object>();
       int bookId = Integer.parseInt(request.params("id"));
       Book book = Book.find(bookId);
+      model.put("allPatrons", Patron.all());
       model.put("book", book);
       model.put("template", "templates/book.vtl");
       return new ModelAndView(model, layout);
@@ -81,6 +82,7 @@ public class App {
       return null;
     });
 
+
     post("/author/:id/delete", (request, response) -> {
       int authorId = Integer.parseInt(request.params("id"));
       Author author = Author.find(authorId);
@@ -88,6 +90,41 @@ public class App {
       response.redirect("/");
       return null;
     });
+
+    get("/patrons", (request, response) -> {
+      HashMap<String, Object> model = new HashMap<String, Object>();
+      model.put("patrons", Patron.all());
+      model.put("template", "templates/patrons.vtl");
+      return new ModelAndView(model, layout);
+    }, new VelocityTemplateEngine());
+
+    post("/patrons", (request, response) -> {
+      String firstName = request.queryParams("firstName");
+      String lastName = request.queryParams("lastName");
+      String phoneNumber = request.queryParams("phoneNumber");
+      Patron newPatron = new Patron(firstName, lastName, phoneNumber);
+      newPatron.save();
+      response.redirect("/patrons");
+      return null;
+    });
+
+    post("/checkout", (request, response) -> {
+      HashMap<String, Object> model = new HashMap<String, Object>();
+      int patronId = Integer.parseInt(request.queryParams("patron_id"));
+      Patron patron = Patron.find(patronId);
+      int bookId = Integer.parseInt(request.queryParams("book_id"));
+      Book book = Book.find(bookId);
+      book.setStatusCheckOut();
+      String checkout_date = request.queryParams("checkout_date");
+      String due_date = request.queryParams("due_date");
+      Checkout newCheckout = new Checkout(patronId, bookId, checkout_date, due_date);
+      newCheckout.save();
+      model.put("patron", patron);
+      model.put("book", book);
+      model.put("checkout", newCheckout);
+      model.put("template", "templates/checkout.vtl");
+      return new ModelAndView(model, layout);
+    }, new VelocityTemplateEngine());
     //
     // get("/student/:id", (request, response) -> {
     //   HashMap<String, Object> model = new HashMap<String, Object>();

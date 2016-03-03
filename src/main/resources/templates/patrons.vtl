@@ -1,0 +1,20 @@
+<h1>Patrons</h1>
+
+#foreach($patron in $patrons)
+  <form class="form-inline" id = "delete$patron.getId()" action="/patron/$patron.getId()/delete" method="post">
+    <h4><a href="/patron/$patron.getId()">$patron.getLastName(), $patron.getFirstName()</a>
+    <button type="submit" class="btn btn-xs btn-danger delete">Delete $patron.getFirstName()</button>
+  </form>
+#end
+
+
+<h4>Add a new patron:</h4>
+<form action="/patrons" method="post">
+  <label for="firstName">First Name</label>
+  <input type="text" name="firstName" id="firstName" required autofocus="autofocus">
+  <label for="lastName">Last Name</label>
+  <input type="text" name="lastName" id="lastName" required>
+  <label for="phoneNumber">Phone Number</label>
+  <input type="text" name="phoneNumber" id="phoneNumber" required>
+  <button type="submit" class="btn btn-success" id="patronButton" name="button">Submit</button>
+</form>
