@@ -12,21 +12,27 @@ public class App {
     String layout = "templates/layout.vtl";
 
 
-    // get("/", (request, response) -> {
-    //   HashMap<String, Object> model = new HashMap<String, Object>();
-    //   model.put("students", Student.all());
-    //   model.put("template", "templates/index.vtl");
-    //   return new ModelAndView(model, layout);
-    // }, new VelocityTemplateEngine());
-    //
-    // post("/", (request, response) -> {
-    //   String firstName = request.queryParams("studentFirstName");
-    //   String lastName = request.queryParams("studentLastName");
-    //   Student newStudent = new Student(firstName, lastName);
-    //   newStudent.save();
-    //   response.redirect("/");
-    //   return null;
-    // });
+    get("/", (request, response) -> {
+      HashMap<String, Object> model = new HashMap<String, Object>();
+      model.put("template", "templates/index.vtl");
+      return new ModelAndView(model, layout);
+    }, new VelocityTemplateEngine());
+
+    get("/authors", (request, response) -> {
+      HashMap<String, Object> model = new HashMap<String, Object>();
+      model.put("authors", Author.all());
+      model.put("template", "templates/authors.vtl");
+      return new ModelAndView(model, layout);
+    }, new VelocityTemplateEngine());
+
+    post("/authors", (request, response) -> {
+      String firstName = request.queryParams("firstName");
+      String lastName = request.queryParams("lastName");
+      Author newAuthor = new Author(firstName, lastName);
+      newAuthor.save();
+      response.redirect("/authors");
+      return null;
+    });
     //
     // post("/student/:id/delete", (request, response) -> {
     //   int studentId = Integer.parseInt(request.params("id"));

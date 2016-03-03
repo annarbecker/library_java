@@ -1,5 +1,24 @@
 index.vtl
-<h1>Student Roster</h1>
+<h1>Library</h1>
+
+<h4>Search By Title:</h4>
+<form action="/" method="post">
+  <label for="authorFirstName">First Name</label>
+  <input type="text" name="studentFirstName" id="studentFirstName" required autofocus="autofocus">
+  <label for="authorLastName">Last Name</label>
+  <input type="text" name="studentLastName" id="studentLastName" required>
+  <button type="submit" class="btn btn-success" id="categoryButton" name="button">Submit</button>
+</form>
+<br>
+<br>
+
+
+
+
+
+
+
+<!--
 <h3>Students:</h3>
 #foreach($student in $students)
   <form class="form-inline" id = "delete$student.getId()" action="/student/$student.getId()/delete" method="post">
@@ -8,18 +27,4 @@ index.vtl
   </form>
 #end
 
-
-<h4>Add a new student:</h4>
-<form action="/" method="post">
-  <label for="studentFirstName">First Name</label>
-  <input type="text" name="studentFirstName" id="studentFirstName" required autofocus="autofocus">
-  <label for="studentLastName">Last Name</label>
-  <input type="text" name="studentLastName" id="studentLastName" required>
-  <button type="submit" class="btn btn-success" id="categoryButton" name="button">Submit</button>
-</form>
-<br>
-<br>
-<a href="/courses"><button class="btn btn-primary" type="button" name="tasks">Add or View a Course</button></a>
-<br>
-<br>
-<a href="/departments"><button class="btn btn-primary" type="button" name="tasks">Add or View a Department</button></a>
+ -->
