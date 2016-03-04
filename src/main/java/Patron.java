@@ -109,4 +109,11 @@ public class Patron {
         .executeUpdate();
     }
   }
+
+  public List<Book> getCurrentBooks() {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT books.* FROM patrons JOIN checkouts ON patrons.id = checkouts.patron_id JOIN books ON checkouts.book_id = books.id WHERE  patron_id = :id AND checkouts.return_date IS NULL";
+      return con.createQuery(sql).addParameter("id", this.getId()).executeAndFetch(Book.class);
+    }
+  }
 }

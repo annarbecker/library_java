@@ -23,7 +23,18 @@ public class App {
       HashMap<String, Object> model = new HashMap<String, Object>();
       String userFirst = request.queryParams("inputtedFirstName");
       String userLast = request.queryParams("inputtedLastName");
-      List<Author> searchedAuthors = Author.searchAuthors("%" + userFirst + "%", "%" + userLast + "%");
+      // if(userFirst != "" && userLast != "") {
+        List<Author> searchedAuthors = Author.searchAuthors("%" + userFirst + "%", "%" + userLast + "%");
+      // }
+      // else if (userFirst != "") {
+      //   List<Author> searchedAuthors = Author.searchAuthorsFirstName("%" + userFirst + "%");
+      // }
+      // else if (userLast != "") {
+      //   List<Author> searchedAuthors = Author.searchAuthorsLastName("%" + userLast + "%");
+      // }
+      // else {
+      //   List<Author> searchedAuthors = Author.searchAuthors("%" + userFirst + "%", "%" + userLast + "%");
+      // }
       String userTitle = request.queryParams("inputtedTitle");
       List<Book> searchedBooks = Book.searchBooks("%" + userTitle + "%");
       model.put("searchedAuthors", searchedAuthors);
@@ -38,6 +49,27 @@ public class App {
       model.put("template", "templates/authors.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
+
+    get("/author/:id", (request, response) -> {
+      HashMap<String, Object> model = new HashMap<String, Object>();
+      int authorId = Integer.parseInt(request.params("id"));
+      Author author = Author.find(authorId);
+      model.put("authorBooks", author.getBooks());
+      model.put("author", author);
+      model.put("allBooks", Book.all());
+      model.put("template", "templates/author.vtl");
+      return new ModelAndView(model, layout);
+    }, new VelocityTemplateEngine());
+
+    post("/author/:id", (request, response) -> {
+      int authorId = Integer.parseInt(request.params("id"));
+      int bookId = Integer.parseInt(request.queryParams("bookId"));
+      Book book = Book.find(bookId);
+      Author author = Author.find(authorId);
+      author.addBook(book);
+      response.redirect("/author/" + authorId);
+      return null;
+    });
 
     post("/authors", (request, response) -> {
       String firstName = request.queryParams("firstName");
@@ -125,6 +157,40 @@ public class App {
       model.put("template", "templates/checkout.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
+
+    get("/patron", (request, response) -> {
+      HashMap<String, Object> model = new HashMap<String, Object>();
+      model.put("allPatrons", Patron.all());
+      model.put("template", "templates/patron.vtl");
+      return new ModelAndView(model, layout);
+    }, new VelocityTemplateEngine());
+
+    post("/patron-info", (request, response) -> {
+      HashMap<String, Object> model = new HashMap<String, Object>();
+      int patronId = Integer.parseInt(request.queryParams("patronId"));
+      Patron patron = Patron.find(patronId);
+      List<Book> books = patron.getCurrentBooks();
+      List<Book> allBooks = patron.getBooks();
+      model.put("patron", patron);
+      model.put("books", books);
+      model.put("allBooks", allBooks);
+      model.put("template", "templates/patron-info.vtl");
+      return new ModelAndView(model, layout);
+    }, new VelocityTemplateEngine());
+
+    post("/patron-checkin", (request, response) -> {
+      int patronId = Integer.parseInt(request.queryParams("patron_id"));
+      Patron patron = Patron.find(patronId);
+      int checkoutId = Integer.parseInt(request.queryParams("checkout_id"));
+      Checkout checkout = Checkout.find(checkoutId);
+      String checkinDate = request.queryParams("checkin_date");
+      checkout.bookCheckIn(checkinDate);
+      Book book = checkout.getBook();
+      book.setStatusCheckIn();
+      response.redirect("/patron");
+      return null;
+    });
+
     //
     // get("/student/:id", (request, response) -> {
     //   HashMap<String, Object> model = new HashMap<String, Object>();

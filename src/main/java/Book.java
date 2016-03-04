@@ -149,4 +149,14 @@ public class Book {
       .executeAndFetch(Book.class);
     }
   }
+
+  public Checkout getCheckout(int patronId){
+    try(Connection con = DB.sql2o.open()){
+      String sql = "SELECT checkouts.* FROM books JOIN checkouts ON books.id = checkouts.book_id WHERE checkouts.book_id = :bookId AND checkouts.patron_id = :patronId AND checkouts.return_date IS NULL";
+    return con.createQuery(sql)
+      .addParameter("bookId", this.getId())
+      .addParameter("patronId", patronId)
+      .executeAndFetchFirst(Checkout.class);
+    }
+  }
 }

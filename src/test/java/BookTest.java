@@ -69,6 +69,6 @@ public class BookTest {
     myBook.save(3);
     Book book = Book.all().get(0);
     book.setStatusCheckOut();
-    assertEquals(Book.find(book.getId()).getStatus() , false);
+    assertEquals(Book.find(book.getId()).getStatus(), false);
   }
 }

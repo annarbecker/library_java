@@ -28,7 +28,6 @@ index.vtl
   #foreach($author in $searchedAuthors)
     <form class="form-inline" id = "delete$author.getId()" action="/author/$author.getId()/delete" method="post">
       <h4><a href="/author/$author.getId()">$author.getLastName(), $author.getFirstName()</a></h4>
-      <button type="submit" class="btn btn-xs btn-danger delete">Delete $author.getFirstName()</button>
     </form>
   #end
 

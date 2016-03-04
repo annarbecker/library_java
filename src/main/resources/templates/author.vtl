@@ -1,0 +1,17 @@
+author.vtl
+<h1>$author.getFirstName() $author.getLastName()</h1>
+<h3>Books by this author:</h3>
+#foreach($book in $authorBooks)
+<h3>$book.getTitle()</h3>
+#end
+<h2>Add this author to a book</h2>
+
+<form class="form-inline" action="/author/$author.getId()" method="post">
+  <select id="bookId" name="bookId" required>
+    <option value="0"></option>
+    #foreach ($book in $allBooks)
+      <option value="$book.getId()">$book.getTitle()</option>
+    #end
+  </select>
+  <button type="submit" class="btn btn-success">Submit</button>
+</form>

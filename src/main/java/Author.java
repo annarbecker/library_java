@@ -116,6 +116,22 @@ public class Author {
         .executeAndFetch(Author.class);
     }
   }
+  public static List<Author> searchAuthorsFirstName(String userFirst) {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT * FROM authors WHERE first_name LIKE :userFirst ";
+      return con.createQuery(sql)
+        .addParameter("userFirst", userFirst)
+        .executeAndFetch(Author.class);
+    }
+  }
+  public static List<Author> searchAuthorsLastName(String userLast) {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT * FROM authors WHERE last_name LIKE :userLast";
+      return con.createQuery(sql)
+        .addParameter("userLast", userLast)
+        .executeAndFetch(Author.class);
+    }
+  }
   //
   // public static String toDisplayCase(String s) {
   //

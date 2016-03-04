@@ -1,0 +1,12 @@
+patron.vtl
+<h2>Select the patron</h2>
+
+<form class="form-inline" action="/patron-info" method="post">
+  <select id="patronId" name="patronId" required>
+    <option value="0"></option>
+    #foreach ($patron in $allPatrons)
+      <option value="$patron.getId()">$patron.getLastName(), $patron.getFirstName()</option>
+    #end
+  </select>
+  <button type="submit" class="btn btn-success">Submit</button>
+</form>
